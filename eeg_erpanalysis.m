@@ -240,4 +240,6 @@ for e = 1 : E
     end
 end
 
+savefig(fig, ['tmperp_', ALLEEG(1).chanlocs(channel).labels]);
+
 end

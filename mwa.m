@@ -105,7 +105,8 @@ end
 % moving window correlation calculation
 rho = movingcorrelation(input, p.Results.CorWindow, p.Results.CorStep);
 rho_tt = rho.data;
-rho = log(sum(rho.data(rho.data > 0)) / sum(abs(rho.data(rho.data < 0))));
+% rho = log(sum(rho.data(rho.data > 0)) / sum(abs(rho.data(rho.data < 0))));
+rho = mean(rho.data);
 
 end
 

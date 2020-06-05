@@ -1,7 +1,7 @@
 function plot_erp
 
 ylab = {'EEG [$$\mu$$V]', 'EDA [-]', 'IBI [ms]'};
-measureName = {'-EEG', '-EDA', '-IBI'};
+measureName = {'_Pz', '_Phasic', '_IBI'};
 stimName = {'WMT', 'IADS'};
 ylimit = {[-1.5, 1.8], [-.25, .5], [-.03 .04]};
 xlimit = {[-100, 1050], [-3000, 31500], [-3000, 31500]};
@@ -41,7 +41,7 @@ end
 
 for m = 1 : 3
     
-    filename = ['ERP', measureName{m}, '.fig'];
+    filename = ['tmperp', measureName{m}, '.fig'];
     fig = openfig(filename);
     axesPlot = findobj(fig.Children, 'Type', 'Axes');
     

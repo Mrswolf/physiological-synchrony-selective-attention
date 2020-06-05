@@ -1,10 +1,15 @@
+% CODE CORRESPONDING TO (STULDREHER ET AL., 2020)
+
+% Author: Ivo Stuldreher, TNO
 
 clearvars; close all;
 
-load('Stimuli')
-
 flag_preprocess = 0;
 flag_randclass = 0;
+
+%% STARTUP
+% load stimulus information ans participant's answers to questions
+load('Stimuli'); load('answers');
 
 % find .set datafiles in directory specified in 'filepath'
 filepath = '../data';
@@ -59,13 +64,41 @@ if ~flag_preprocess
 end
 
 % perform analysis using eeg
-[isc(:,:,:,1), p_isc(:,:,1), stats_isc(:,:,1), perf_isc(:,:,1), rand_perf(:,1,:), q_erp_eeg, stats_erp_eeg] = eeg_analysis( ALLEEG, Stimuli, flag_randclass);
+[isc(:,:,:,1), p_isc(:,:,1), stats_isc(:,:,1), perf_isc(:,:,1), rand_perf(:,:,:,1), q_erp_eeg, stats_erp_eeg] = eeg_analysis( ALLEEG, Stimuli, flag_randclass);
 
 % perform analysis using autonomic measures
-[isc(:,:,:,2:3), p_isc(:,:,2:3), stats_isc(:,:,2:3), perf_isc(:,:,2:3), rand_perf(:,2:3,:), q_erp_aut, stats_erp_aut] = aut_analysis( ALLAUT, Stimuli, flag_randclass);
+[isc(:,:,:,2:3), p_isc(:,:,2:3), stats_isc(:,:,2:3), perf_isc(:,:,2:3), rand_perf(:,:,:,2:3), q_erp_aut, stats_erp_aut] = aut_analysis( ALLAUT, Stimuli, flag_randclass);
 
 % correlate isc with answers on questions
 [r_ans, p_ans, rank] = answer_correlation(squeeze(isc(:,:,1,:)), answers);
+
+%% STATISTICAL TESTING
+
+for mm = 1 : size(isc, 4)
+  
+    for gg = 1 : 2
+        
+        for ss = 1 : 4
+            
+            % test if data is normally distributed    
+            [H(mm , gg, ss), pValue(mm, gg, ss), W(mm,gg, ss)] = swtest(isc(:,gg,ss,mm));
+
+            % use t-test for normally distributed data and wilcoxon test
+            % for non-normally distributed data
+            if H(mm,gg,ss)
+                [p_isc(ss,gg,mm), ~, stats_isc_alt(ss,gg,mm)] = signrank(isc(conditionList == gg-1, 1,ss,mm), isc(conditionList == gg-1, 2,ss,mm), 'method', 'approximate');
+            else
+                [~,p_isc(ss,gg,mm), ~, stats_isc(ss,gg,mm)] = ttest(isc(conditionList == gg-1, 1,ss,mm), isc(conditionList == gg-1, 2,ss,mm));
+            end
+
+        end
+
+    end
+    
+end
+
+
+
 
 %% VISUALIZATION
 
@@ -73,7 +106,30 @@ end
 plot_isc(isc, p_isc, conditionList);
 
 % figure 2
-plot_corr(squeeze(isc(:,:,1,:)), rank, r_ans, p_ans);
-
-% figure 3
 plot_erp;
+
+%% PRINT RESULTS
+
+% print some results
+measureName = {'EEG', 'EDA', 'IBI'};
+stimCondName = {'narrative & stimuli', 'beep counting task', 'affective sounds', 'narrative only'};
+groupName = {'NA', 'SSA'};
+for mm = 1 : size(isc, 4)
+    for ss = 1 : size(isc, 3)
+        fprintf('%s\n', measureName{mm})
+        fprintf('Analysis considering the %s\n', stimCondName{ss})
+        fprintf(' Statistical difference between within-group and between-group ISC:\n')
+        for g = 1 : 2
+            fprintf('   %s: %s\n    t(%i) = %f, p = %f\n', groupName{g}, string(p_isc(ss,g,mm) < .05),  stats_isc(ss,g,mm).df, stats_isc(ss,g,mm).tstat, p_isc(ss,g,mm))
+        end
+
+        fprintf(' Classification performance:\n')
+        fprintf('   %f\n', mean(perf_isc(:,ss,mm)))
+        fprintf('\n')
+        
+        % classification performance above chance
+        [h(mm,ss), p(mm,ss), ~, stats(mm,ss)] = ttest2(mean(perf_isc(:,ss,mm)), mean(rand_perf(:,:,ss,mm), 2), ...
+            'tail', 'right');
+        
+    end
+end

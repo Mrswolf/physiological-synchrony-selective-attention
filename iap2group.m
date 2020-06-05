@@ -1,4 +1,4 @@
-function [isc_tg, perf, rand_perf, p, stats, r_ans, p_ans, median_rand_perf, confInterv] = iap2group(data, G, stimulusIdc, flag_randperf)
+function [isc_tg, perf, rand_perf, p, stats] = iap2group(data, G, stimulusIdc, flag_randperf)
 % IAP2GROUP computes inter-subject correlations of interpersonal autonomic
 % physiology (IAP) with respect to two groups with separate
 % attentional focus.
@@ -35,8 +35,8 @@ isc_pp = cell(D,1);
 isc_tg = zeros(N,2,4,D);
 
 nShuffle = 100;
-perf = zeros(2, length(stimulusIdc), length(D));
-rand_perf = zeros(nShuffle, 2, length(stimulusIdc), length(D));
+perf = zeros(2, length(stimulusIdc), D); p = zeros(length(stimulusIdc), 2, D);
+rand_perf = zeros(nShuffle, 2, length(stimulusIdc), D);
 
 for c = 1 : D
     isc_pp{c} = zeros(N,N,length(stimulusIdc));
@@ -69,9 +69,9 @@ for c = 1 : D
         end
         
         for g = 1 : 2
-            perf(i,g,c) = (2/N) * length(find(isc_tg{c}(G == g, g,i) > isc_tg{c}(G == g, setdiff(1:2,g),i))); 
+            perf(g,i,c) = (2/N) * length(find(isc_tg(G == g, g,i,c) > isc_tg(G == g, setdiff(1:2,g),i,c))); 
             
-            [~,p(i,g,c), ~, stats(i,g,c)] = ttest(isc_tg{c}(G == g, 1,i), isc_tg{c}(G == g, 2,i));
+            [~,p(i,g,c), ~, stats(i,g,c)] = ttest(isc_tg(G == g, 1,i,c), isc_tg(G == g, 2,i,c));
             
         end
         

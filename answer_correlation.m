@@ -1,5 +1,5 @@
 
-function [r_ans, p_ans, rank] = answer_correlation( isc, answers)
+function [r_ans, p_ans, rank] = answer_correlation( isc, answers, selfreport)
 
 [N, ~, ~, ~] = size(isc);
 
@@ -7,20 +7,26 @@ function [r_ans, p_ans, rank] = answer_correlation( isc, answers)
 varname = fieldnames(answers); rank = zeros(N, length(varname));
 r_ans = zeros(2, length(varname), size(isc, 3)); p_ans = zeros(2,length(varname), size(isc, 3));
 
-% for beeps, performance is based on the absolute distance from the correct
-% answers (a much lower estimation and much higher estimation are both
-% incorrect). To align beeps with the other measures we take the inverse.
-% Then for all measures holds: the higher, the better.
-answers.beeps = abs(answers.beeps);
-answers.beeps = 1./(answers.beeps + 1);
-
 for ss = 1 : length(varname)
+    
+    % remove outlier answers
+    answers.beeps([2, 25]) = nan;
+    answers.iads(13) = nan;
+    
+    % for beeps, performance is based on the absolute distance from the correct
+    % answers (a much lower estimation and much higher estimation are both
+    % incorrect). To align beeps with the other measures we take the inverse.
+    % Then for all measures holds: the higher, the better.
+    if strcmp(varname{ss}, 'beeps')
+        answers.beeps = abs(answers.beeps);
+        answers.beeps = 1./(answers.beeps + 1);
+    end
+    
+    % provide score for each participants based on rank. Best answer gets
+    % rank 26, worst answer gets rank 1
+    rank(:,ss) = tiedrank(answers.(varname{ss}));
 
     for mm = 1 : size(isc, 3)
-
-        % provide score for each participants based on rank. Best answer gets
-        % rank 26, worst answer gets rank 1
-        rank(:,ss) = tiedrank(answers.(varname{ss}));
 
         % compute correlations between isc with respect to group g and the rank
         % performance of answers j
