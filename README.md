@@ -9,3 +9,5 @@ The code in this repository is dependent on the following add-ons:
 - Ledalab toolbox (http://www.ledalab.de)
 - corrca.m from the Correlated Component Analysis package (https://www.parralab.org/corrca/)
 - sigstar.m (https://nl.mathworks.com/matlabcentral/fileexchange/39696-raacampbell-sigstar)
+- Pan-Tompkin algorithm (for instance: https://nl.mathworks.com/matlabcentral/fileexchange/45840-complete-pan-tompkins-implementation-ecg-qrs-detector)
+- fdr_bh.m (https://nl.mathworks.com/matlabcentral/fileexchange/27418-fdr_bh)

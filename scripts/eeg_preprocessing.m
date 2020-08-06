@@ -3,6 +3,10 @@ function [ALLEEG] = eeg_preprocessing( filepath, filename)
 N = length(filename);
 ALLEEG = [];
 
+if exist([filepath, '/', 'eeg_processed']) ~= 7
+    mkdir([filepath, '/', 'eeg_processed']);
+end
+
 for n = 1 : N
     
     % load data of participant n
@@ -59,6 +63,7 @@ for n = 1 : N
 
     % save processed dataset
     [~, name] = fileparts(filename{n});
+    
     EEG = pop_saveset( EEG, ...
         'filename', [name, '.set'], ...
         'filepath', [filepath, '/', 'eeg_processed']);

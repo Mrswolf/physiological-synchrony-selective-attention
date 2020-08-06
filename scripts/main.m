@@ -12,7 +12,7 @@ flag_randclass = 0;
 load('Stimuli'); load('answers');
 
 % find .set datafiles in directory specified in 'filepath'
-filepath = '../data';
+filepath = '../../data';
 d = dir([filepath, '/*.set']);
 isub = [d(:).isdir] ==  false;
 filename = {d(isub).name}';
@@ -97,15 +97,12 @@ for mm = 1 : size(isc, 4)
     
 end
 
-
-
-
 %% VISUALIZATION
 
-% figure 1
+% figure 2
 plot_isc(isc, p_isc, conditionList);
 
-% figure 2
+% figure 3
 plot_erp;
 
 %% PRINT RESULTS

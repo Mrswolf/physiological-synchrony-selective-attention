@@ -27,6 +27,9 @@ isc_tg = cell(C,1);
 
 % compute synchrony toward groups
 for i = 1 : C
+    x = nan(size(X));
+    x(stimulusIdc{i},:,:) = X(stimulusIdc{i},:,:);
+    
     [isc_tg{i}, perf(:,i)] = isc2group(X(stimulusIdc{i}, :, :), conditionList + 1);
     isc(:,:,i) = sum(isc_tg{i}(1:3,:,:));
     

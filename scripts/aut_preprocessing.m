@@ -3,6 +3,10 @@ function [ALLEEG] = aut_preprocessing( filepath, filename)
 N = length(filename);
 ALLEEG = [];
 
+if exist([filepath, '/', 'aut_processed']) ~= 7
+    mkdir([filepath, '/', 'aut_processed']);
+end
+
 for n = 1 : N
     
     % load data of participant n
