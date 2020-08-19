@@ -3,7 +3,7 @@
 This repository contains the MATLAB scripts reproducing the results as presented in (Stuldreher et al., 2020). Please read carefully the information below. The presented analysis is dependent on lots of externally produced scripts, that are referred to here. For questions, please contact [Ivo Stuldreher](mailto:ivo.stuldreher@tno.nl).
 
 ### LICENSING
-Reuse of the data and scripts is permitted under the CC-By Attribution 3.0 International license. Use is only allowed with a citation to (Stuldreher et al., 2020) in any publication.
+Reuse of the data and scripts is permitted under the CC-By Attribution 4.0 International license. Use is only allowed with a citation to (Stuldreher et al., 2020) in any publication.
 
 ### Dependencies
 The code in this repository is dependent on the following add-ons:
@@ -19,4 +19,4 @@ The code in this repository is dependent on the following add-ons:
 - swtest.m (https://nl.mathworks.com/matlabcentral/fileexchange/13964-shapiro-wilk-and-shapiro-francia-normality-tests)
 
 ### REFERENCES
-Stuldreher, I.V., Thammasan, N., Van Erp, J.B.F., Brouwer, A.M. (2020). *Journal of Neural Engineering* [doi:10.1088/1741-2552/aba87d](https://iopscience.iop.org/article/10.1088/1741-2552/aba87d)
+Stuldreher, I.V., Thammasan, N., Van Erp, J.B.F., Brouwer, A.M. (2020). *Journal of Neural Engineering* ***17*** *046028* [doi:10.1088/1741-2552/aba87d](https://iopscience.iop.org/article/10.1088/1741-2552/aba87d)
